@@ -44,27 +44,27 @@
 # clean:
 # 	rm -f *.o *.a connections
 
-# Flags and commands
-CC = gcc
-AR = ar
-CFLAGS = -Wall -g
-AFLAGS = rcs
+FLSGS = -Wall -g
 
-.PHONY: clean all
+.PHONY: all clean
 
-all: connections
+all: my_mat.a connections
 
-connections: main.o libmymath.a
-	$(CC) $(CFLAGS) $^ -o $@
-
-libmymath.a: my_mat.o
-	$(AR) $(AFLAGS) $@ $<
-
-main.o: main.c my_mat.h
-	$(CC) $(CFLAGS) -c $<
-
+# Generating library:
 my_mat.o: my_mat.c my_mat.h
-	$(CC) $(CFLAGS) -c $<
+	gcc ${FLSGS} -fPIC -c my_mat.c -o my_mat.o
 
+my_mat.a: my_mat.o
+	ar -rcs my_mat.a my_mat.o
+	ranlib my_mat.a
+
+# Generating main:
+main.o: main.c my_mat.h
+	gcc ${FLSGS} -c main.c -o main.o
+
+connections: main.o my_mat.a
+	gcc ${FLSGS} main.o my_mat.a -o connections
+
+# Cleaning:
 clean:
-	rm -f *.o *.a connections
+	rm -f connections *.a *.o
