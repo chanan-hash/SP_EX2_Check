@@ -50,7 +50,7 @@ AR = ar
 CFLAGS = -Wall -g
 AFLAGS = rcs
 
-.PHONY: all clean
+.PHONY: all clean connections
 
 all: connections
 
