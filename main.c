@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "my_mat.h"
 int main()
 {
@@ -15,9 +16,10 @@ int main()
     char userChoise;
     int i, j;
 
+    scanf("%c", &userChoise); // May not need the space
+
     while (userChoise != 'D') // Exit the program
     {
-        scanf("%c", &userChoise); // May not need the space
 
         if (userChoise == 'A') // Entering value to the graph that represented as a matrix
         {
