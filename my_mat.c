@@ -33,36 +33,72 @@ int findMinDist(int distance[], bool isVisited[], int size)
 // An explanation and animation for the idea https://www.youtube.com/watch?v=5Uaq71PXa8Y
 int findPath(int **mat, int size, int src, int dst)
 {
-    bool ifVisited[size];
-    int dist[size]; // Distance array from the givven point
+    // bool ifVisited[size];
+    // int dist[size]; // Distance array from the givven point
 
-    // going over the distance fron the given point and initilizing with INFINITY,and false, beacsue we're still didn't visited them
+    // // going over the distance fron the given point and initilizing with INFINITY,and false, beacsue we're still didn't visited them
+    // for (int i = 0; i < size; i++)
+    // {
+    //     dist[i] = INFINITY, ifVisited[i] = False;
+    // }
+
+    // dist[src] = 0; // From a the beggining vertex to itself, the distance is zero
+
+    // // Now to find the next vertex to go to we need to find the min value in our row
+    // for (int counter = 0; counter < size - 1; counter++)
+    // {
+    //     int v = findMinDist(dist, ifVisited, size); // Finding the next vertex to go to
+    //     ifVisited[v] = True;                        // Updating that we're going to visit this vertex
+
+    //     // Now updating the distance to this vertex
+    //     for (int u = 0; u < size; u++)
+    //     {
+    //         // If we haven't visited that vertex, and it's valuse is not infinity,
+    //         // and the distance till it smaller from what we've found so we'll update it
+    //         if (!ifVisited[u] && mat[v][u] && dist[v] != INFINITY && dist[v] + mat[v][u] < dist[u])
+    //         {
+    //             dist[u] = dist[v] + mat[v][u];
+    //         }
+    //     }
+    // }
+
+    // return dist[dst]; // returning the update shortest path to the destination vertex
+    int distanceFromVert[size], counter = 0, min, u;
+    bool scannedVert[size];
+
     for (int i = 0; i < size; i++)
     {
-        dist[i] = INFINITY, ifVisited[i] = False;
+        distanceFromVert[i] = INFINITY;
+        scannedVert[i] = false;
     }
 
-    dist[src] = 0; // From a the beggining vertex to itself, the distance is zero
+    distanceFromVert[src] = 0;
 
-    // Now to find the next vertex to go to we need to find the min value in our row
-    for (int counter = 0; counter < size - 1; counter++)
+    while (++counter < size)
     {
-        int v = findMinDist(dist, ifVisited, size); // Finding the next vertex to go to
-        ifVisited[v] = True;                        // Updating that we're going to visit this vertex
+        min = INFINITY;
 
-        // Now updating the distance to this vertex
-        for (int u = 0; u < size; u++)
+        for (int vert = 0; vert < size; ++vert)
         {
-            // If we haven't visited that vertex, and it's valuse is not infinity,
-            // and the distance till it smaller from what we've found so we'll update it
-            if (!ifVisited[u] && mat[v][u] && dist[v] != INFINITY && dist[v] + mat[v][u] < dist[u])
-            {
-                dist[u] = dist[v] + mat[v][u];
-            }
+            if (scannedVert[vert] || distanceFromVert[vert] > min)
+                continue;
+
+            min = distanceFromVert[vert];
+            u = vert;
+        }
+
+        scannedVert[u] = true;
+
+        for (int v = 0; v < size; v++)
+        {
+            if (scannedVert[v] || !mat[u][v] || distanceFromVert[u] == INFINITY || (distanceFromVert[u] + mat[u][v] >= distanceFromVert[v]))
+                continue;
+
+            distanceFromVert[v] = distanceFromVert[u] + mat[u][v];
         }
     }
 
-    return dist[dst]; // returning the update shortest path to the destination vertex
+    return distanceFromVert[dst];
 }
 
 int isPath(int **mat, int size, int i, int j)
